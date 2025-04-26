@@ -17,7 +17,36 @@ const port = 3000;
 app.use(express.json());
 app.use(cors());
 
+/**
+ * Routes
+ */
+
+//read
+app.get("/api", (req, res) => {
+    res.json({ message: "Welcome to my work experience API" });
+});
+
+//read
+app.get("/api/work_experience", (req, res) => {
+    res.json({ message: "Get work experience" })
+});
+
+//create
+app.post("/api/work_experience", (req, res) => {
+    res.json({ message: "Work expreience added" })
+});
+
+//update
+app.put("/api/work_experience/:id", (req, res) => {
+    res.json({ message: `Work experience updated: ${req.params.id}` })
+});
+
+//delete
+app.delete("/api/work_experience/:id", (req, res) => {
+    res.json({ message: `Work experience deleted: ${req.params.id}` })
+});
+
 //Starta server
-app.listen(port, ()=>{
-    console.log("Server running on port: " + port)
+app.listen(port, () => {
+    console.log(`Server running on port: ${port}`)
 });
