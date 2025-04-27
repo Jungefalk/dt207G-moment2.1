@@ -29,7 +29,7 @@ connection.connect((error) => {
     if (error) {
         console.log(`Connection failed ${error}`)
     }
-
+    
     console.log(`Connected to database`)
 
 });

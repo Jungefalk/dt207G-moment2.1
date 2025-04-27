@@ -6,6 +6,17 @@
     <title>Testar API</title>
 </head>
 <body>
-    
+    <script>
+
+        getData();
+
+        async function getData() {
+
+            const response = await fetch("http://127.0.0.1:3000/api/work_experience");
+            const data = await response.json();
+
+            console.log(data)
+        };
+    </script>
 </body>
 </html>
