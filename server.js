@@ -9,6 +9,9 @@ const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql");
 
+//hämta variabler från env-filen
+require("dotenv").config();
+
 //insällnigar
 const app = express();
 const port = 3000;
