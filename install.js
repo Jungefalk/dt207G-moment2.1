@@ -25,10 +25,25 @@ connection.connect((error) => {
 });
 
 //Query för att radera tabellen om den redan existerar
-connection.query("DROP TABLE IF EXISTS work_experience", (error, result)=>{
-    if(error){
+connection.query("DROP TABLE IF EXISTS work_experience", (error, result) => {
+    if (error) {
         throw error;
     }
     console.log("Table dropped")
 })
 
+//Query för att skapa tabellen work_experience
+connection.query(`CREATE TABLE work_experience (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    company_name VARCHAR (100),
+    job_title VARCHAR (100),
+    location VARCHAR (100),
+    start_date DATE,
+    end_date DATE,
+    description TEXT
+);`, (error, result) => {
+    if (error) {
+        throw error;
+    }
+    console.log("work_experience table created")
+});
