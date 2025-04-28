@@ -43,11 +43,6 @@ app.use(cors());
  */
 
 //read
-app.get("/api", (req, res) => {
-    res.json({ message: "Welcome to my work experience API" });
-});
-
-//read
 app.get("/api/work_experience", (req, res) => {
 
     //Hämta databastabell
