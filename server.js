@@ -92,7 +92,7 @@ app.post("/api/work_experience", (req, res) => {
     });
 });
 
-//update
+//update - baserat på ID
 app.put("/api/work_experience/:id", (req, res) => {
 
     //variabler
@@ -108,17 +108,31 @@ app.put("/api/work_experience/:id", (req, res) => {
     connection.query(`UPDATE work_experience SET company_name=?, job_title=?, location=?, start_date=?, end_date=?, description=? WHERE id=?`, [company_name, job_title, location, start_date, end_date, description, id], (error, results) => {
         if (error) {
             res.status(500).json({ message: "An error occured, try again later" })
-        } else if(results.affectedRows === 0) {
+        } else if (results.affectedRows === 0) {
             res.status(404).json({ message: "No work experience found" })
-        } else{
+        } else {
             res.json({ message: `Work experience updated: ${id}` })
         }
     });
 });
 
-//delete
+//delete - baserat på ID
 app.delete("/api/work_experience/:id", (req, res) => {
-    res.json({ message: `Work experience deleted: ${req.params.id}` })
+
+    //variabel för id
+    const id = req.params.id;
+
+    //Ta bort en work experience
+    connection.query(`DELETE FROM work_experience WHERE id = ?`, [id], (error, results) => {
+        if (error) {
+            res.status(500).json({ message: "An error occured, try again later" })
+        } else if (results.affectedRows === 0) {
+            res.status(404).json({ message: "No work experience found" })
+        } else {
+            res.json({ message: `Work experience deleted: ${id}` })
+        }
+    });
+
 });
 
 //Starta server
