@@ -24,3 +24,11 @@ connection.connect((error) => {
 
 });
 
+//Query för att radera tabellen om den redan existerar
+connection.query("DROP TABLE IF EXISTS work_experience", (error, result)=>{
+    if(error){
+        throw error;
+    }
+    console.log("Table dropped")
+})
+
