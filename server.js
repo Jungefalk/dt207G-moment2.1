@@ -77,7 +77,7 @@ app.post("/api/work_experience", (req, res) => {
     let description = req.body.description;
 
     //kontrollera att nödvändig information är korrekt
-    if (!id || !company_name || !job_title || !location || !start_date || !end_date || !description) {
+    if (!company_name || !job_title || !location || !start_date || !end_date || !description) {
         return res.status(400).json({ message: "All the fields of work experience needs to be filled out" });
     }
 
@@ -94,7 +94,26 @@ app.post("/api/work_experience", (req, res) => {
 
 //update
 app.put("/api/work_experience/:id", (req, res) => {
-    res.json({ message: `Work experience updated: ${req.params.id}` })
+
+    //variabler
+    const id = req.params.id;
+    const { company_name, job_title, location, start_date, end_date, description } = req.body;
+
+    //kontroll att alla fält är korrekta
+    if (!company_name || !job_title || !location || !start_date || !end_date || !description) {
+        return res.status(400).json({ message: "All the fields of work experience needs to be filled out" })
+    }
+
+    //Uppdatera värde i databasen
+    connection.query(`UPDATE work_experience SET company_name=?, job_title=?, location=?, start_date=?, end_date=?, description=? WHERE id=?`, [company_name, job_title, location, start_date, end_date, description, id], (error, results) => {
+        if (error) {
+            res.status(500).json({ message: "An error occured, try again later" })
+        } else if(results.affectedRows === 0) {
+            res.status(404).json({ message: "No work experience found" })
+        } else{
+            res.json({ message: `Work experience updated: ${id}` })
+        }
+    });
 });
 
 //delete
