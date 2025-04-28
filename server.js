@@ -14,7 +14,7 @@ require("dotenv").config();
 
 //insällnigar
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 //databasanslutning med mysql
 const connection = mysql.createConnection({
@@ -85,7 +85,7 @@ app.post("/api/work_experience", (req, res) => {
     connection.query(`INSERT INTO work_experience (company_name, job_title, location, start_date, end_date, description)VALUES(?, ?, ?, ?, ?, ?)`, [company_name, job_title, location, start_date, end_date, description], (error, results) => {
         if (error) {
             console.error(`There was an error: ${error} `)
-            res.status(500).json({ message: "An error occured" })
+            res.status(500).json({ message: "An error occured" + error })
         } else {
             res.status(201).json({ message: "work experience added" })
         }
@@ -107,7 +107,7 @@ app.put("/api/work_experience/:id", (req, res) => {
     //Uppdatera värde i databasen
     connection.query(`UPDATE work_experience SET company_name=?, job_title=?, location=?, start_date=?, end_date=?, description=? WHERE id=?`, [company_name, job_title, location, start_date, end_date, description, id], (error, results) => {
         if (error) {
-            res.status(500).json({ message: "An error occured, try again later" })
+            res.status(500).json({ message: "An error occured, try again later" + error })
         } else if (results.affectedRows === 0) {
             res.status(404).json({ message: "No work experience found" })
         } else {
@@ -125,7 +125,7 @@ app.delete("/api/work_experience/:id", (req, res) => {
     //Ta bort en work experience
     connection.query(`DELETE FROM work_experience WHERE id = ?`, [id], (error, results) => {
         if (error) {
-            res.status(500).json({ message: "An error occured, try again later" })
+            res.status(500).json({ message: "An error occured, try again later" + error })
         } else if (results.affectedRows === 0) {
             res.status(404).json({ message: "No work experience found" })
         } else {
