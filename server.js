@@ -67,7 +67,29 @@ app.get("/api/work_experience", (req, res) => {
 //create
 app.post("/api/work_experience", (req, res) => {
 
-    res.json({ message: "Work expreience added" })
+    //Lagra data i varaibler
+    let id = req.body.id;
+    let company_name = req.body.company_name;
+    let job_title = req.body.job_title;
+    let location = req.body.location;
+    let start_date = req.body.start_date;
+    let end_date = req.body.end_date;
+    let description = req.body.description;
+
+    //kontrollera att nödvändig information är korrekt
+    if (!id || !company_name || !job_title || !location || !start_date || !end_date || !description) {
+        return res.status(400).json({ message: "All the fields of work experience needs to be filled out" });
+    }
+
+    //Lägg till i databasen
+    connection.query(`INSERT INTO work_experience (company_name, job_title, location, start_date, end_date, description)VALUES(?, ?, ?, ?, ?, ?)`, [company_name, job_title, location, start_date, end_date, description], (error, results) => {
+        if (error) {
+            console.error(`There was an error: ${error} `)
+            res.status(500).json({ message: "An error occured" })
+        } else {
+            res.status(201).json({ message: "work experience added" })
+        }
+    });
 });
 
 //update
