@@ -49,17 +49,17 @@ connection.query(`CREATE TABLE work_experience (
 });
 
 //Skapa data till tabellen
-connection.query(`INSERT INTO work_experience (id, company_name, job_title, location, start_date, end_date, description) VALUES (1, "Rusta", "Butiksanställd", "Bromma", "2019-10-10", "2021-03-31", "Kundservice. Kassa. Påfyll. Lager. Inventering.")`, (error, result) => {
+connection.query("INSERT INTO work_experience (company_name, job_title, location, start_date, end_date, description)VALUES(?, ?, ?, ?, ?, ?)", ["Rusta", "Butiksanställd", "Bromma", "2019-10-10", "2021-03-31", "Kundservice. Kassa. Påfyll. Lager. Inventering."], (error, result) => {
     if (error) {
         throw error;
     }
     console.log("Work experience added")
-})
+});
 
-connection.query(`INSERT INTO work_experience (id, company_name, job_title, location, start_date, end_date, description) VALUES (2, "Sekelskifte", "Lagerarbetare", "Västberga", "2021-04-16", "2025-09-01", "Inleverans. Truckkörning. Returhantering. Inventering. Plocka och packa.")`, (error, result) => {
+connection.query("INSERT INTO work_experience (company_name, job_title, location, start_date, end_date, description)VALUES(?, ?, ?, ?, ?, ?)", ["Sekelskifte", "Lagerarbetare", "Västberga", "2021-04-16", "2025-09-01", "Inleverans. Truckkörning. Returhantering. Inventering. Plocka och packa."], (error, result) => {
     if (error) {
         throw error;
     }
     console.log("Work experience added")
-})
+});
 
