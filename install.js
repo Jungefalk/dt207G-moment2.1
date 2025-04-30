@@ -42,6 +42,20 @@ db.serialize(() => {
         //Skapa data till tabell
         const stmt = db.prepare("INSERT INTO work_experience (company_name, job_title, location, start_date, end_date, description)VALUES(?, ?, ?, ?, ?, ?);");
 
+        stmt.run("Best of Brands", "Lagerarbetare", "Vällingby", "2016-08-01", "2017-07-31", "Packa upp. Prismärka. Inventera. Plocka/packa ordrar. Returhantering.", (error, result) => {
+            if (error) {
+                throw error;
+            };
+            console.log("Work experience added");
+        });
+
+        stmt.run("Espresso House", "Barista", "Jakobsberg", "2017-08-01", "2018-05-30", "Kundservice. Kassa. Göra kaffe. Bereda mat.", (error, result) => {
+            if (error) {
+                throw error;
+            };
+            console.log("Work experience added");
+        });
+
         stmt.run("Rusta", "Butiksanställd", "Bromma", "2019-10-10", "2021-03-31", "Kundservice. Kassa. Påfyll. Lager. Inventering.", (error, result) => {
             if (error) {
                 throw error;
