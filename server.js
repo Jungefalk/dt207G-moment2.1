@@ -7,36 +7,26 @@
 //Importera paket
 const express = require("express");
 const cors = require("cors");
-const mysql = require("mysql");
+const sqlite3 = require("sqlite3");
 
-//hämta variabler från env-filen
-require("dotenv").config();
 
-//insällnigar
+//inställnigar
 const app = express();
-const port = process.env.PORT || 3000;
-
-//databasanslutning med mysql
-const connection = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE
-});
-
-//Kontrollera anslutning
-connection.connect((error) => {
-    if (error) {
-        console.log(`Connection failed ${error}`)
-    }
-
-    console.log(`Connected to database`)
-
-});
+const port = 3000;
 
 //middleware
 app.use(express.json());
 app.use(cors());
+
+
+//Anslut till databas
+const db = new sqlite3.Database("./db/cv.db", (error) => {
+    if (error) {
+        return console.error("Connection to database failed " + error.message);
+    }
+    console.log("Connected to database");
+
+});
 
 /**
  * Routes
@@ -46,7 +36,7 @@ app.use(cors());
 app.get("/api/work_experience", (req, res) => {
 
     //Hämta databastabell
-    connection.query(`SELECT * FROM work_experience`, (err, results) => {
+    db.all(`SELECT * FROM work_experience`, (err, results) => {
         if (err) {
             res.status(500).json({ error: `Something went wrong ${err}` });
             return;
@@ -68,7 +58,6 @@ app.get("/api/work_experience", (req, res) => {
 app.post("/api/work_experience", (req, res) => {
 
     //Lagra data i varaibler
-    let id = req.body.id;
     let company_name = req.body.company_name;
     let job_title = req.body.job_title;
     let location = req.body.location;
@@ -82,13 +71,17 @@ app.post("/api/work_experience", (req, res) => {
     }
 
     //Lägg till i databasen
-    connection.query(`INSERT INTO work_experience (company_name, job_title, location, start_date, end_date, description)VALUES(?, ?, ?, ?, ?, ?)`, [company_name, job_title, location, start_date, end_date, description], (error, results) => {
+
+    const stmt = db.prepare("INSERT INTO work_experience (company_name, job_title, location, start_date, end_date, description)VALUES(?, ?, ?, ?, ?, ?);");
+
+    stmt.run(company_name, job_title, location, start_date, end_date, description, (error) => {
         if (error) {
             console.error(`There was an error: ${error} `)
-            res.status(500).json({ message: "An error occured" + error })
+            res.status(500).json({ message: "An error occured: " + error })
         } else {
             res.status(201).json({ message: "work experience added" })
-        }
+        };
+        stmt.finalize();
     });
 });
 
@@ -105,11 +98,9 @@ app.put("/api/work_experience/:id", (req, res) => {
     }
 
     //Uppdatera värde i databasen
-    connection.query(`UPDATE work_experience SET company_name=?, job_title=?, location=?, start_date=?, end_date=?, description=? WHERE id=?`, [company_name, job_title, location, start_date, end_date, description, id], (error, results) => {
+    db.run(`UPDATE work_experience SET company_name=?, job_title=?, location=?, start_date=?, end_date=?, description=? WHERE id=?`, [company_name, job_title, location, start_date, end_date, description, id], (error) => {
         if (error) {
-            res.status(500).json({ message: "An error occured, try again later" + error })
-        } else if (results.affectedRows === 0) {
-            res.status(404).json({ message: "No work experience found" })
+            res.status(500).json({ message: "An error occured, try again later" + error.message })
         } else {
             res.json({ message: `Work experience updated: ${id}` })
         }
@@ -123,11 +114,9 @@ app.delete("/api/work_experience/:id", (req, res) => {
     const id = req.params.id;
 
     //Ta bort en work experience
-    connection.query(`DELETE FROM work_experience WHERE id = ?`, [id], (error, results) => {
+    db.run(`DELETE FROM work_experience WHERE id = ?`, [id], (error) => {
         if (error) {
-            res.status(500).json({ message: "An error occured, try again later" + error })
-        } else if (results.affectedRows === 0) {
-            res.status(404).json({ message: "No work experience found" })
+            res.status(500).json({ message: "An error occured, try again later" + error.message })
         } else {
             res.json({ message: `Work experience deleted: ${id}` })
         }
