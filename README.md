@@ -12,7 +12,7 @@ Länk till APIet[https://dt207g-moment2-1-bgly.onrender.com/api/work_experience]
 SQLite används för API:et. För att använda det, klona ner filerna och installera nödvändiga paket med npm install. För att bygga databasen kör installationsscriptet så skapas tabeller enl nedan.
 
 | Kolumn | Datatyp | Beskrivning |
-| --- | --- | --- |
+| --- | --- | --- |
 | id | INTEGER | Primärnyckel |
 | company_name | TEXT | Namn på företaget |
 | job_title | TEXT | Jobbtitel |
